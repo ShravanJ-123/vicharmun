@@ -173,14 +173,16 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     try {
       const response = await fetch(SCRIPT_URL, {
         method: "POST",
-        mode: "no-cors", // Required for Google Apps Script
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-      
-      // Since we use no-cors, we can't read the response, but we assume success if no error is thrown
+
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission failed:", error);
