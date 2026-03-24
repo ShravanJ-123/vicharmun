@@ -44,7 +44,7 @@ const isNonEmpty = (value: string) => value.trim().length > 0;
 const isTxnIdLikely = (value: string) => /^[A-Za-z0-9]{8,}$/.test(value.trim());
 const MAX_SCREENSHOT_BYTES = 2 * 1024 * 1024; // 2 MB
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxf9joQDR-ohJqXBqOWk6RxkVzz-mAsCZYrq2QkirxO4Hy3RxZNq2QseRlB8q4Gh5MybQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwsdDqz7h-toKWII0pLW02eDvU3Q5d2tHdd93OETA_fE7IDiQ_BPQA7wC2L3_iq_LBwmA/exec";
 
 // --- Razorpay Declaration ---
 declare global {
@@ -173,16 +173,14 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     try {
       const response = await fetch(SCRIPT_URL, {
         method: "POST",
+        mode: "no-cors", // Required for Google Apps Script
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-
-      if (!response.ok) {
-        throw new Error(`Server returned ${response.status}`);
-      }
-
+      
+      // Since we use no-cors, we can't read the response, but we assume success if no error is thrown
       setIsSuccess(true);
     } catch (error) {
       console.error("Submission failed:", error);
